@@ -1,23 +1,37 @@
 class Solution {
     public int wiggleMaxLength(int[] nums) {
-        int length = nums.length;
-        if (length == 0 || length == 1)
-            return length;
+        if (nums.length <= 1)
+            return nums.length;
 
         int count = 1;
-        int prevDiff = nums[1] - nums[0];
+        int pd = 0, m = 0, n = 1;
+        
+        while (n == 1 && m < nums.length - 1) {
+            if (nums[m] > nums[m + 1]) {
+                pd = 1;
+                n = 0;
+            } else if (nums[m] < nums[m + 1]) {
+                pd = -1;
+                n = 0;
+            }
+            m++;
+            if (m == nums.length-1&&pd==0)
+            return 1;
+        }
 
-        if (prevDiff != 0)
-            count = 2;
+        if (m == nums.length)
+            return 1;
 
-        for (int i = 2; i < length; i++) {
-            int currentDiff = nums[i] - nums[i - 1];
-            if ((currentDiff > 0 && prevDiff <= 0) || (currentDiff < 0 && prevDiff >= 0)) {
+        for (int i = 1; i < nums.length - 1; i++) {
+            int nd = nums[i] - nums[i + 1];
+            if (nd == 0)
+                continue;
+            if ((pd == 0 && nd != 0) || (pd != 0 && pd * nd < 0)) {
                 count++;
-                prevDiff = currentDiff;
+                pd = nd;
             }
         }
 
-        return count;
+        return count + 1;
     }
 }
